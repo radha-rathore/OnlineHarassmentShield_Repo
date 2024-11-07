@@ -6,7 +6,7 @@ from google.generativeai.types import HarmCategory, HarmBlockThreshold
 import json
 import ast
 
-geminiApiKey ='AIzaSyAZusOvaJoWEbtHwpLGKYmas4RxCPvKvWw'
+geminiApiKey = '**************' # Replace with your gemini API key
 genai.configure(api_key=geminiApiKey)
 
 ## To overcome safety settings
@@ -33,8 +33,7 @@ gemini_model = genai.GenerativeModel(
 
 def wait_for_files_active(perpetrator_File):
   """Waits for the given files to be active.
-  Some files uploaded to the Gemini API need to be processed before they can be
-  used as prompt inputs. The status can be seen by querying the file's "state" field.
+  Some files uploaded to the Gemini API need to be processed before they can be used as prompt inputs. The status can be seen by querying the file's "state" field.
   This implementation uses a simple blocking polling loop. Production code should probably employ a more sophisticated approach.
   """
   print("Waiting for file processing...")
@@ -48,6 +47,9 @@ def wait_for_files_active(perpetrator_File):
   print()
 
 def call_Gemini_To_Catgorize(input_Content):
+  ''' 
+  Creates the final prompt and call gemini to categorize.
+  '''
     
   perpetrator_input = input_Content #Input message from perpetrator, could be text, image, audio, video
 
@@ -77,12 +79,12 @@ def receiveMessageforGemini(inputContent=None, content_Type= None, file_path= No
     if content_Type== 'text':
         geminiResponse = call_Gemini_To_Catgorize(inputContent)
     else:
-        print(file_path)
+        # print(file_path)
         perpetrator_Message = genai.upload_file(file_path)
         wait_for_files_active(perpetrator_Message) # Some files have a processing delay. Wait for them to be ready.
         geminiResponse = call_Gemini_To_Catgorize(perpetrator_Message)
 
-    print(geminiResponse)
+    # print(geminiResponse)
     msg = geminiResponse.replace('json','').replace("```", '').strip() # Cleaning response
     catList = ast.literal_eval(msg)
 

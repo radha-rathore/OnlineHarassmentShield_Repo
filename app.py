@@ -10,7 +10,6 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'jfif', 'mp3', 'wav', 'mp4', 'mov', 'ogg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SECRET_KEY'] = 'your_secret_key'
 
 # In-memory storage for simplicity
 users = {
@@ -82,7 +81,7 @@ def send_message():
 @app.route('/view_messages')
 def view_messages():
     recipient_messages = users["recipient"]["messages"]
-    print(recipient_messages)
+    # print(recipient_messages)
     return render_template('view_messages.html', messages=recipient_messages)
 
 @app.route('/report_message/<int:message_index>', methods=['GET', 'POST'])
