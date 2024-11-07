@@ -1,0 +1,81 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<h2>Received Messages</h2>
+<br>
+{% for message in messages %}
+    <div style="background-color:#f4e7d4; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
+        <p><strong>From:</strong> {{ message.sender }}</p>
+        
+        {% if message.is_malicious %}
+            <p><em>Category:</em> <b>{{ message.category }}</b></p>
+            
+            <!-- Blurred Text Message -->
+            {% if message.content %}
+                <p class="blur-content" style="filter: blur(5px);">{{ message.content }}</p>
+            {% endif %}
+
+            <!-- Blurred Image Message -->
+            {% if message.filetype == 'image' %}
+                <img src="{{ url_for('static', filename=message.file_url) }}" class="blur-content" style="filter: blur(10px); max-width: 250px; max-height: 250px; object-fit: contain;">
+            {% endif %}
+
+            <!-- Blurred Audio Message -->
+            {% if message.filetype == 'audio' %}
+                <audio controls class="blur-content" style="filter: blur(5px);" onclick="removeBlur(this)">
+                    <source src="{{ url_for('static', filename=message.file_url) }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            {% endif %}
+
+            <!-- Blurred Video Message -->
+            {% if message.filetype == 'video' %}
+                <video width="350" controls class="blur-content" style="filter: blur(10px);" onclick="removeBlur(this)">
+                    <source src="{{ url_for('static', filename=message.file_url) }}" type="video/mp4">
+                    Your browser does not support the video element.
+                </video>
+            {% endif %}
+
+            <!-- Toggle Blur Button -->
+            <button onclick="toggleBlur(this)" style='margin-right:10px'>View Message</button>
+            <a href="{{ url_for('report_message', message_index=loop.index0) }}" style='margin-right:10px'>Report</a>
+            <button onclick="getHelp()" style='margin-right:10px'>Get Help</button>
+        
+        {% else %}
+            <!-- Display non-malicious content normally -->
+            <p>{{ message.content }}</p>
+            
+            {% if message.filetype == 'image' %}
+                <img src="{{ url_for('static', filename=message.file_url) }}" width="100px">
+            {% elif message.filetype == 'audio' %}
+                <audio controls>
+                    <source src="{{ url_for('static', filename=message.file_url) }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            {% elif message.filetype == 'video' %}
+                <video width="150" controls>
+                    <source src="{{ url_for('static', filename=message.file_url) }}" type="video/mp4">
+                    Your browser does not support the video element.
+                </video>
+            {% endif %}
+        {% endif %}
+        
+        <p><small>{{ message.timestamp }}</small></p>
+        <hr>
+    </div>
+{% endfor %}
+
+<script>
+    function toggleBlur(button) {
+        const messageDiv = button.parentNode;
+        const blurContents = messageDiv.querySelectorAll('.blur-content');
+        blurContents.forEach(content => {
+            content.style.filter = content.style.filter === 'blur(5px)' ? '' : 'blur(5px)';
+        });
+        button.textContent = button.textContent === 'View Message' ? 'Hide Message' : 'View Message';
+    }
+
+    function getHelp() {
+        alert("Remember, it's never the victim's fault!! \nIf you are experiencing harassment, please reach out:\n\nCyber Police: 123-456-7890\nCounselor: 098-765-4321\nSupport Line: 555-555-5555");
+    }
+</script>

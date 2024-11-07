@@ -1,0 +1,39 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<h2>Pepetrator Profile</h2>
+
+<h3>(Please send only one kind of message at once - text/ image/ audio/ video)</h3>
+<br> <br>
+<form method="post" enctype="multipart/form-data">
+    <!-- Text Input -->
+    <textarea name="content" id="text-content" placeholder="Type your text message here" rows="3" cols="40" oninput="toggleInputs('text')"></textarea><br>
+    <br>
+
+    <!-- Image Upload -->
+    <label>Upload an image:</label><br>
+    <input type="file" name="file" id="image-upload" accept="image/*" onchange="toggleInputs('image')"><br><br>
+    <br>
+
+    <!-- Audio Upload -->
+    <label>Upload an audio file:</label><br>
+    <input type="file" name="file" id="audio-upload" accept="audio/*" onchange="toggleInputs('audio')"><br><br>
+    <br>
+
+    <!-- Video Upload -->
+    <label>Upload a video file:</label><br>
+    <input type="file" name="file" id="video-upload" accept="video/*" onchange="toggleInputs('video')"><br><br>
+    <br>
+
+    <button type="submit">Send</button>
+</form>
+
+<script>
+    // Function to enable only the selected input type
+    function toggleInputs(selectedType) {
+        document.getElementById('text-content').disabled = selectedType !== 'text';
+        document.getElementById('image-upload').disabled = selectedType !== 'image';
+        document.getElementById('audio-upload').disabled = selectedType !== 'audio';
+        document.getElementById('video-upload').disabled = selectedType !== 'video';
+    }
+</script>
